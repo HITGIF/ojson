@@ -1,0 +1,7 @@
+(test
+ (name test)
+ (libraries core ojson)
+ (deps
+  (glob_files_rec ./test_cases/*))
+ (preprocess
+  (pps ppx_jane ppx_let ppx_expect ppx_inline_test)))

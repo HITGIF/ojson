@@ -1,0 +1,6 @@
+(library
+ (name ojson)
+ (libraries core)
+ (preprocess
+  (pps ppx_jane ppx_let ppx_expect ppx_inline_test))
+ (inline_tests))
