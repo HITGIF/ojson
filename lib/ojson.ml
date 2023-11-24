@@ -589,7 +589,7 @@ end
 
 open! Core
 
-let parse input =
+let parse_exn input =
   input
   |> String.to_list
   |> List.fold ~init:(Value.start_state ()) ~f:(fun state c ->
@@ -602,6 +602,8 @@ let parse input =
   |> Option.value_exn
        ~error:(Error.create_s [%message "Cannot parse input" (input : string)])
 ;;
+
+let parse input = Or_error.try_with (fun () -> parse_exn input)
 
 let%expect_test "parse" =
   let input =
@@ -634,7 +636,7 @@ let%expect_test "parse" =
       }
     |}
   in
-  print_s [%sexp (parse input : Json.t)];
+  print_s [%sexp (parse_exn input : Json.t)];
   [%expect
     {|
     (Object

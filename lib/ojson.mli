@@ -1,3 +1,5 @@
+open! Core
+
 module Json : sig
   type t =
     [ `String of string
@@ -11,4 +13,5 @@ module Json : sig
   [@@deriving sexp_of]
 end
 
-val parse : string -> Json.t
+val parse_exn : string -> Json.t
+val parse : string -> Json.t Or_error.t

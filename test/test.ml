@@ -12,7 +12,7 @@ let () =
   in
   List.iter test_cases ~f:(fun test_case ->
     let file = Core.In_channel.read_all ("./test_cases/" ^ test_case) in
-    let json = Or_error.try_with (fun () -> Ojson.parse file) in
+    let json = Ojson.parse file in
     match String.get test_case 0 with
     | 'i' -> (* parsers are free to accept or reject content *) ()
     | 'y' ->
@@ -26,8 +26,10 @@ let () =
     | 'n' ->
       (* content must be rejected by parsers *)
       (match json with
-       | Ok _ ->
-         Error.raise_s [%message "Expected to fail" (test_case : string) (file : string)]
+       | Ok json ->
+         Error.raise_s
+           [%message
+             "Expected to fail" (test_case : string) (file : string) (json : Ojson.Json.t)]
        | Error _ -> ())
     | prefix -> Error.raise_s [%message "Unknown test case prefix" (prefix : char)]);
   print_endline [%string "All %{(List.length test_cases)#Int} test cases passed"]

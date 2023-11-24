@@ -11,7 +11,7 @@ let command =
          ; flag "-string" (optional string) ~doc:"STRING string to parse"
          ]
      in
-     fun () -> print_s [%sexp (Ojson.parse str : Ojson.Json.t)])
+     fun () -> print_s [%sexp (Ojson.parse str : Ojson.Json.t Or_error.t)])
 ;;
 
 let () = Command.run command
