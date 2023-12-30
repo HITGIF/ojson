@@ -593,14 +593,14 @@ let parse_exn input =
   input
   |> String.to_list
   |> List.fold ~init:(Value.start_state ()) ~f:(fun state c ->
-       Value.transition state c
-       |> Option.value_exn
-            ~error:
-              (Error.create_s
-                 [%message "Cannot parse charactor" ~char:(c : char) (state : Value.t)]))
+       match Value.transition state c with
+       | Some state -> state
+       | None ->
+         Error.raise_s [%message "Cannot parse input" (input : string) (state : Value.t)])
   |> Value.parse
-  |> Option.value_exn
-       ~error:(Error.create_s [%message "Cannot parse input" (input : string)])
+  |> function
+  | Some state -> state
+  | None -> Error.raise_s [%message "Cannot parse input" (input : string)]
 ;;
 
 let parse input = Or_error.try_with (fun () -> parse_exn input)
